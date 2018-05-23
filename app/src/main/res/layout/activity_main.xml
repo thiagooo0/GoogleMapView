@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+
+        <variable
+            name="mapListener"
+            type="com.ksw.googlemapviewsimple.MapListener" />
+    </data>
+
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,10 +19,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <!--<Button-->
-            <!--android:id="@+id/btn_add_view"-->
-            <!--android:layout_width="96dp"-->
-            <!--android:layout_height="48dp"/>-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <Button
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:onClick="@{()->mapListener.addHome()}"
+                android:text="show my home" />
+
+            <Button
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:onClick="@{()->mapListener.removeHome()}"
+                android:text="remove my home" />
+
+            <Button
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:onClick="@{()->mapListener.addPlace1()}"
+                android:text="show some place" />
+
+            <Button
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:onClick="@{()->mapListener.removePlace1()}"
+                android:text="hide some place" />
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>
