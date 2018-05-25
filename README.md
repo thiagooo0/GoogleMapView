@@ -1,0 +1,1 @@
+make your InfoWindow of GoogleMap alive.
