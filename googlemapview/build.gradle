@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.thiagooo0'
+//group='com.github.thiagooo0'
 android {
-    resourcePrefix "ksw" //不知道有什么用
+//    resourcePrefix "ksw" //不知道有什么用
     compileSdkVersion 26
     defaultConfig {
         minSdkVersion 21
