@@ -1,14 +1,17 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.thiagooo0'
+//group='com.github.thiagooo0'
 android {
+//    resourcePrefix "ksw" //不知道有什么用
     compileSdkVersion 26
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 7
         versionName '1.0.6'
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
