@@ -43,12 +43,12 @@ public class InfoWindow {
     }
 
     /**
-     * we need infoWindow & marker to finish the job.
+     * we need infoWindow && marker to finish the job.
      *
      * @return is this infoWindow have infoWindow{@link #infoWindow} and marker.
      */
     public boolean isEmpty() {
-        return infoWindow != null && marker != null;
+        return infoWindow == null || marker == null;
     }
 
     public View getInfoWindow() {
