@@ -5,13 +5,16 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.Marker;
 import com.ksw.googlemapview.R;
 import com.ksw.googlemapview.been.InfoWindow;
 
@@ -29,6 +32,7 @@ import java.util.ArrayList;
  * @date 2018/5/18
  */
 public class GMapView extends FrameLayout {
+    private static final String TAG = "GMapView";
     private WrapperLayout wrapperLayout;
     private GoogleMap googleMap;
     private MapView mapView;
@@ -108,6 +112,10 @@ public class GMapView extends FrameLayout {
      * @param infoWindow the infoWindow u want to show, {@link InfoWindow}
      */
     public void showInfoWindow(InfoWindow infoWindow) {
+        if (infoWindow.isEmpty()) {
+            Log.d(TAG, "info window is null");
+            return;
+        }
         if (!infoWindows.contains(infoWindow)) {
             infoWindows.add(infoWindow);
             WrapperLayout.LayoutParams layoutParams = new WrapperLayout.LayoutParams(
@@ -117,6 +125,24 @@ public class GMapView extends FrameLayout {
             infoWindow.getInfoWindow().setLayoutParams(layoutParams);
             wrapperLayout.addView(infoWindow.getInfoWindow());
         }
+    }
+
+    /**
+     * show a infoWindow.yes,u can show many infoWindow on a same time.
+     */
+    public InfoWindow showInfoWindow(View view, Marker marker) {
+        InfoWindow infoWindow = new InfoWindow(view, marker);
+        showInfoWindow(infoWindow);
+        return infoWindow;
+    }
+
+    /**
+     * show a infoWindow.yes,u can show many infoWindow on a same time.
+     */
+    public InfoWindow showInfoWindow(View view, Marker marker, int offsetX, int offsetY) {
+        InfoWindow infoWindow = new InfoWindow(view, marker, offsetX, offsetY);
+        showInfoWindow(infoWindow);
+        return infoWindow;
     }
 
     /**
