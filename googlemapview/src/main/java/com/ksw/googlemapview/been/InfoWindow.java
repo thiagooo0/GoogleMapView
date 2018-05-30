@@ -13,6 +13,8 @@ public class InfoWindow {
      * the infoWindow u want to add into the map.
      */
     private View infoWindow;
+
+    private int infoWindowId;
     /**
      * offset in x axis(px).
      */
@@ -30,25 +32,37 @@ public class InfoWindow {
     public InfoWindow() {
     }
 
-    public InfoWindow(View infoWindow, Marker marker) {
-        setInfoWindow(infoWindow);
+    public InfoWindow(int layoutId, Marker marker) {
+        setInfoWindowId(layoutId);
         setMarker(marker);
     }
 
-    public InfoWindow(View infoWindow, Marker marker, int offsetX, int offsetY) {
-        setInfoWindow(infoWindow);
+    public InfoWindow(int layoutId, Marker marker, int offsetX, int offsetY) {
+        setInfoWindowId(layoutId);
+        setMarker(marker);
+        setOffsetX(offsetX);
+        setOffsetY(offsetY);
+    }
+
+    public InfoWindow(View view, Marker marker) {
+        setInfoWindow(view);
+        setMarker(marker);
+    }
+
+    public InfoWindow(View view, Marker marker, int offsetX, int offsetY) {
+        setInfoWindow(view);
         setMarker(marker);
         setOffsetX(offsetX);
         setOffsetY(offsetY);
     }
 
     /**
-     * we need infoWindow && marker to finish the job.
+     * we need (infoWindow||infoWindowId) && marker to finish the job.
      *
      * @return is this infoWindow have infoWindow{@link #infoWindow} and marker.
      */
     public boolean isEmpty() {
-        return infoWindow == null || marker == null;
+        return (infoWindowId == 0 && infoWindow == null) || marker == null;
     }
 
     public View getInfoWindow() {
@@ -81,5 +95,13 @@ public class InfoWindow {
 
     public void setMarker(Marker marker) {
         this.marker = marker;
+    }
+
+    public int getInfoWindowId() {
+        return infoWindowId;
+    }
+
+    public void setInfoWindowId(int infoWindowId) {
+        this.infoWindowId = infoWindowId;
     }
 }

@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -117,13 +118,28 @@ public class GMapView extends FrameLayout {
             return;
         }
         if (!infoWindows.contains(infoWindow)) {
+            if (infoWindow.getInfoWindow() != null) {
+                if (infoWindow.getInfoWindow().getLayoutParams() == null) {
+                    WrapperLayout.LayoutParams layoutParams = new WrapperLayout.LayoutParams(
+                            WrapperLayout.LayoutParams.WRAP_CONTENT, WrapperLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.topToTop = WrapperLayout.LayoutParams.PARENT_ID;
+                    layoutParams.leftToLeft = WrapperLayout.LayoutParams.PARENT_ID;
+                    infoWindow.getInfoWindow().setLayoutParams(layoutParams);
+                }
+                wrapperLayout.addView(infoWindow.getInfoWindow());
+            } else {
+                //init the view
+                ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(infoWindow.getInfoWindowId(), wrapperLayout);
+                //get the view
+                infoWindow.setInfoWindow(viewGroup.getChildAt(viewGroup.getChildCount() - 1));
+                //set params
+                WrapperLayout.LayoutParams layoutParams = (WrapperLayout.LayoutParams) infoWindow.getInfoWindow().getLayoutParams();
+                layoutParams.topToTop = WrapperLayout.LayoutParams.PARENT_ID;
+                layoutParams.leftToLeft = WrapperLayout.LayoutParams.PARENT_ID;
+                infoWindow.getInfoWindow().setVisibility(INVISIBLE);
+                infoWindow.getInfoWindow().setLayoutParams(layoutParams);
+            }
             infoWindows.add(infoWindow);
-            WrapperLayout.LayoutParams layoutParams = new WrapperLayout.LayoutParams(
-                    WrapperLayout.LayoutParams.WRAP_CONTENT, WrapperLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.topToTop = WrapperLayout.LayoutParams.PARENT_ID;
-            layoutParams.leftToLeft = WrapperLayout.LayoutParams.PARENT_ID;
-            infoWindow.getInfoWindow().setLayoutParams(layoutParams);
-            wrapperLayout.addView(infoWindow.getInfoWindow());
         }
     }
 
@@ -146,10 +162,28 @@ public class GMapView extends FrameLayout {
     }
 
     /**
+     * show a infoWindow.yes,u can show many infoWindow on a same time.
+     */
+    public InfoWindow showInfoWindow(int layoutId, Marker marker) {
+        InfoWindow infoWindow = new InfoWindow(layoutId, marker);
+        showInfoWindow(infoWindow);
+        return infoWindow;
+    }
+
+    /**
+     * show a infoWindow.yes,u can show many infoWindow on a same time.
+     */
+    public InfoWindow showInfoWindow(int layoutId, Marker marker, int offsetX, int offsetY) {
+        InfoWindow infoWindow = new InfoWindow(layoutId, marker, offsetX, offsetY);
+        showInfoWindow(infoWindow);
+        return infoWindow;
+    }
+
+    /**
      * dismiss a infoWindow.
      */
     public void dismissInfoWindow(InfoWindow infoWindow) {
-        this.infoWindows.remove(infoWindow);
+        infoWindows.remove(infoWindow);
         wrapperLayout.removeView(infoWindow.getInfoWindow());
     }
 

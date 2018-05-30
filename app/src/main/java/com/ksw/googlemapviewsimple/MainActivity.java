@@ -4,8 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,12 +49,11 @@ public class MainActivity extends AppCompatActivity implements MapListener {
     @Override
     public void addHome() {
         if (homeInfoWindow == null) {
-            View view = LayoutInflater.from(this).inflate(R.layout.item_home, null);
-            TextView tvTitle = view.findViewById(R.id.title);
-            tvTitle.setOnClickListener(v -> Toast.makeText(MainActivity.this, "this is my home", Toast.LENGTH_SHORT).show());
-            homeInfoWindow = new InfoWindow(view, homeMaker);
+            homeInfoWindow = new InfoWindow(R.layout.item_home, homeMaker);
         }
         binding.mapView.showInfoWindow(homeInfoWindow);
+        TextView tvTitle = homeInfoWindow.getInfoWindow().findViewById(R.id.title);
+        tvTitle.setOnClickListener(v -> Toast.makeText(MainActivity.this, "this is my home", Toast.LENGTH_SHORT).show());
     }
 
     @Override
