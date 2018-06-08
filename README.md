@@ -22,3 +22,15 @@ dependencies {
 ```
 
 ### Use it
+you can see the simple at app module.
+
+1, use the GMapView as the GoogleMapView in your xml
+2, show a InfoWindow
+```java
+//you should keep the InfoWindow instance to hide it.
+mapView.showInfoWindow(new InfoWIndow());
+``` 
+3, hide a InfoWindow
+```java
+mapView.dismissInfoWindow(infoWindow);
+```
