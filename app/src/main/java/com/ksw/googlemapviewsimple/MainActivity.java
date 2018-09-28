@@ -39,8 +39,11 @@ public class MainActivity extends AppCompatActivity implements MapListener {
             place1Maker = googleMap.addMarker(new MarkerOptions().position(new LatLng(50.15, 90.44)));
 
             googleMap.setOnMarkerClickListener(marker -> false);
+            googleMap.setOnCameraMoveListener(() -> binding.mapView.updateInfoWindow());
+            googleMap.setOnCameraIdleListener(() -> binding.mapView.updateInfoWindow());
         });
         binding.setVariable(BR.mapListener, this);
+        binding.mapView.setAutoUpdate(false);
     }
 
     private InfoWindow homeInfoWindow;

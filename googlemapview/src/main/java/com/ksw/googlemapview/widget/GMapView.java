@@ -44,6 +44,11 @@ public class GMapView extends FrameLayout {
     private Point point;
     private WrapperLayout.LayoutParams layoutParams;
 
+    /**
+     * 是否自动更新InfoWindow。
+     */
+    private boolean isAutoUpdate = true;
+
     public GMapView(Context context) {
         this(context, null);
     }
@@ -64,28 +69,15 @@ public class GMapView extends FrameLayout {
             @Override
             public void run() {
                 while (flag) {
-                    GMapView.this.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //every 16 seconds,update the position of all the infoWindow.
-                            if (infoWindows.size() != 0) {
-                                projection = googleMap.getProjection();
-                                for (InfoWindow infoWindow : infoWindows) {
-                                    point = projection.toScreenLocation(infoWindow.getMarker().getPosition());
-                                    if (point.x < 0 || point.y < 0) {
-                                        //when the marker out of the screen, infoWindow invisible too.
-                                        infoWindow.getInfoWindow().setVisibility(INVISIBLE);
-                                    } else {
-                                        infoWindow.getInfoWindow().setVisibility(VISIBLE);
-                                        layoutParams = (WrapperLayout.LayoutParams) infoWindow.getInfoWindow().getLayoutParams();
-                                        layoutParams.leftMargin = point.x + infoWindow.getOffsetX();
-                                        layoutParams.topMargin = point.y + infoWindow.getOffsetY();
-                                        infoWindow.getInfoWindow().setLayoutParams(layoutParams);
-                                    }
-                                }
+                    if (isAutoUpdate) {
+                        GMapView.this.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //every 16 seconds,update the position of all the infoWindow.
+                                updateInfoWindow();
                             }
-                        }
-                    });
+                        });
+                    }
                     try {
                         Thread.sleep(16);
                     } catch (InterruptedException e) {
@@ -94,6 +86,28 @@ public class GMapView extends FrameLayout {
                 }
             }
         }).start();
+    }
+
+    /**
+     * 更新InfoWindow的方法。每调用一次，更新一次InfoWindow的位置。
+     */
+    public void updateInfoWindow() {
+        if (infoWindows.size() != 0) {
+            projection = googleMap.getProjection();
+            for (InfoWindow infoWindow : infoWindows) {
+                point = projection.toScreenLocation(infoWindow.getMarker().getPosition());
+                if (point.x < 0 || point.y < 0) {
+                    //when the marker out of the screen, infoWindow invisible too.
+                    infoWindow.getInfoWindow().setVisibility(INVISIBLE);
+                } else {
+                    infoWindow.getInfoWindow().setVisibility(VISIBLE);
+                    layoutParams = (WrapperLayout.LayoutParams) infoWindow.getInfoWindow().getLayoutParams();
+                    layoutParams.leftMargin = point.x + infoWindow.getOffsetX();
+                    layoutParams.topMargin = point.y + infoWindow.getOffsetY();
+                    infoWindow.getInfoWindow().setLayoutParams(layoutParams);
+                }
+            }
+        }
     }
 
     public void getMapAsync(final OnMapReadyCallback onMapReadyCallback) {
@@ -143,6 +157,7 @@ public class GMapView extends FrameLayout {
             }
             infoWindows.add(infoWindow);
         }
+        updateInfoWindow();
     }
 
     /**
@@ -212,6 +227,7 @@ public class GMapView extends FrameLayout {
 
     public void onDestroy() {
         flag = false;
+        isAutoUpdate = false;
         mapView.onDestroy();
     }
 
@@ -221,5 +237,13 @@ public class GMapView extends FrameLayout {
 
     public final void onSaveInstanceState(Bundle bundle) {
         mapView.onSaveInstanceState(bundle);
+    }
+
+    public boolean isAutoUpdate() {
+        return isAutoUpdate;
+    }
+
+    public void setAutoUpdate(boolean autoUpdate) {
+        isAutoUpdate = autoUpdate;
     }
 }
