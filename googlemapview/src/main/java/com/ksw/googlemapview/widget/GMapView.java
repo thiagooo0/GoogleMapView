@@ -41,6 +41,9 @@ public class GMapView extends FrameLayout {
     private ArrayList<InfoWindow> infoWindows = new ArrayList<>();
     private boolean flag = false;
 
+    private Point point;
+    private WrapperLayout.LayoutParams layoutParams;
+
     public GMapView(Context context) {
         this(context, null);
     }
@@ -68,14 +71,13 @@ public class GMapView extends FrameLayout {
                             if (infoWindows.size() != 0) {
                                 projection = googleMap.getProjection();
                                 for (InfoWindow infoWindow : infoWindows) {
-                                    Point point = projection.toScreenLocation(infoWindow.getMarker().getPosition());
+                                    point = projection.toScreenLocation(infoWindow.getMarker().getPosition());
                                     if (point.x < 0 || point.y < 0) {
                                         //when the marker out of the screen, infoWindow invisible too.
                                         infoWindow.getInfoWindow().setVisibility(INVISIBLE);
                                     } else {
                                         infoWindow.getInfoWindow().setVisibility(VISIBLE);
-                                        WrapperLayout.LayoutParams layoutParams =
-                                                (WrapperLayout.LayoutParams) infoWindow.getInfoWindow().getLayoutParams();
+                                        layoutParams = (WrapperLayout.LayoutParams) infoWindow.getInfoWindow().getLayoutParams();
                                         layoutParams.leftMargin = point.x + infoWindow.getOffsetX();
                                         layoutParams.topMargin = point.y + infoWindow.getOffsetY();
                                         infoWindow.getInfoWindow().setLayoutParams(layoutParams);
